@@ -115,6 +115,14 @@ Invoke-Pester -Path .\Tests -Output Detailed
 
 Tests cover typed comparison, collection coverage, remoting serialization, persistence, and HTML output. No credentials or live connections are needed. The combined development workspace passed 177 tests, plus 36 Windows provider tests under PowerShell 5.1. Read-only live checks also confirmed clean remoted DNS arrays and SSH state capture in the adapters; these do not replace platform-specific coverage testing.
 
+## Thanks to PSWriteHTML
+
+DriftDetect's configuration and drift reports are built with [PSWriteHTML](https://github.com/EvotecIT/PSWriteHTML). A big thank-you to the [Evotec team](https://github.com/EvotecIT) and the project's contributors for making rich reporting accessible from PowerShell.
+
+PSWriteHTML helps turn PowerShell data into interactive tables, dashboards, charts, diagrams, HTML pages, and emails without having to build the HTML, CSS, and JavaScript yourself. Their work gives PowerShell authors more time to focus on the information they want to share.
+
+Explore the [examples](https://github.com/EvotecIT/PSWriteHTML/tree/master/Examples) and [documentation](https://github.com/EvotecIT/PSWriteHTML#readme). If their tools help you, consider starring the project, sharing what you build, or contributing fixes and documentation. DriftDetect benefits from that work, and we're grateful for it.
+
 ## License
 
 [MIT](LICENSE), matching the DriftDetect technology modules.
