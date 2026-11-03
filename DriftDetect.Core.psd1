@@ -7,5 +7,5 @@
     PowerShellVersion='7.0'
     FunctionsToExport=@('New-DDRuleSet','Import-DDRuleSet','New-DDEntity','New-DDCollection','Invoke-DDCollector','New-DDSnapshot','Test-DDSnapshot','Export-DDSnapshot','Import-DDSnapshot','Compare-DDSnapshot','Get-DDHash','Export-DDConfigurationReport','Export-DDDriftReport')
     CmdletsToExport=@(); VariablesToExport=@(); AliasesToExport=@()
-    PrivateData=@{PSData=@{Tags=@('Configuration','Drift','Monitoring');LicenseUri='https://opensource.org/license/mit'}}
+    PrivateData=@{PSData=@{Tags=@('Configuration','Drift','Monitoring');LicenseUri='https://github.com/Warezloder/DriftDetect.Core/blob/main/LICENSE';ProjectUri='https://github.com/Warezloder/DriftDetect.Core'}}
 }

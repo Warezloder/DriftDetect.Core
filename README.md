@@ -3,23 +3,47 @@ title: DriftDetect.Core
 tags: [powershell, driftdetect]
 ---
 
+![DriftDetect family — Snapshot. Compare. Report.](assets/family-banner-01.png)
+
 # DriftDetect.Core 1.0.1
 
 Common snapshots, collection coverage, typed comparison, JSON persistence and HTML reporting. Requires PowerShell 7.0+. HTML export alone requires PSWriteHTML >=0.0.170.
 
 Version 1.0.1 fixes CLIXML-remoted lists that also identify as PowerShell custom objects: collection interfaces take precedence over object properties. Empty, singleton, and ordered lists retain their array shape, without allocation metadata. Persisted snapshots are not rewritten; adapters must version affected collection contracts and require fresh baselines when capture shape changes.
 
-## Local use
+## DriftDetect modules
 
-Place all three sibling module directories under a directory in PSModulePath. For this checkout, a process-only development setup is:
+Core supplies the common comparison engine, rules, snapshot format, and reports. Technology adapters collect configuration from their respective platforms.
+
+| Module | Purpose |
+|---|---|
+| **DriftDetect.Core** | Shared snapshots, comparison rules, coverage, JSON persistence, and HTML reports |
+| [DriftDetect.WinServer](https://github.com/Warezloder/DriftDetect.WinServer) | Windows Server configuration collection through PowerShell remoting; 16 collection units |
+| [DriftDetect.ESXi](https://github.com/Warezloder/DriftDetect.ESXi) | ESXi configuration collection through PowerCLI; 19 collection units |
+
+The banner illustrates the module family; the adapter READMEs document current collection coverage and exclusions.
+
+## Getting started
+
+Clone and import Core from source in PowerShell 7:
 
 ~~~powershell
-$env:PSModulePath = 'C:\Tools\Repositories\DriftDetect;' + $env:PSModulePath
-Import-Module DriftDetect.WinServer
-Import-Module DriftDetect.ESXi
+git clone https://github.com/Warezloder/DriftDetect.Core.git
+Import-Module .\DriftDetect.Core\DriftDetect.Core.psd1
 ~~~
 
-No global installation, PowerCLI connection or PSWriteHTML import is needed for offline JSON and comparison.
+For adapter use, place the sibling module directories under a directory on `PSModulePath`. You can add their parent to the current process without editing your profile:
+
+~~~powershell
+$moduleParent = (Resolve-Path .\DriftDetect.Core).Path | Split-Path -Parent
+$env:PSModulePath = $moduleParent + [IO.Path]::PathSeparator + $env:PSModulePath
+Import-Module DriftDetect.Core -MinimumVersion 1.0.1
+# Once their repositories are cloned beside Core:
+# Import-Module DriftDetect.WinServer
+# Import-Module DriftDetect.ESXi
+~~~
+
+No global installation, PowerCLI connection, or PSWriteHTML import is needed for offline JSON and comparison. Install PSWriteHTML >=0.0.170 when exporting HTML reports. This repository provides source installation; a PowerShell Gallery package is not assumed.
 
 ## Common contract
 
@@ -82,6 +106,15 @@ The Windows adapter omits task arguments unless the exact full task path appears
 
 ## Verification
 
-Run tools/Test-DriftDetect.ps1 from the workspace parent. It stages fresh packages, runs Pester, and retains XML/JSON evidence under artifacts/test-runs. No credentials or live connections are needed. Automated collector tests mock platform commands; live-server and minimum-version runtime validation are separate.
+From this repository's root, run the Core tests with Pester 5 and PSWriteHTML installed:
 
-The final combined implementation suite passed 142 tests. The Windows provider suite also passed 23 tests under Windows PowerShell 5.1. See [review resolutions and evidence](../review-artifacts/implementation-review-resolutions.md). Generate synthetic examples with tools/New-SampleReports.ps1; HTML/JSON examples are under artifacts/examples.
+~~~powershell
+Import-Module Pester -MinimumVersion 5.0
+Invoke-Pester -Path .\Tests -Output Detailed
+~~~
+
+Tests cover typed comparison, collection coverage, remoting serialization, persistence, and HTML output. No credentials or live connections are needed. The combined development workspace passed 177 tests, plus 36 Windows provider tests under PowerShell 5.1. Read-only live checks also confirmed clean remoted DNS arrays and SSH state capture in the adapters; these do not replace platform-specific coverage testing.
+
+## License
+
+[MIT](LICENSE), matching the DriftDetect technology modules.
